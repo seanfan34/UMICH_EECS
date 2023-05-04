@@ -1,0 +1,6 @@
+Parallelization strategy:
+
+After analyzing the original code. I found that the code is composed of 2 separate calculations. Using the multithreading strategy can easily optimize the program due to it can be paralleled without any conflict.
+So I focus on improving the speedup of this program, I use the strategy called pthread to accelerate the performance. First of all, I create a pthread instruction called calculate_image. 
+The number of threads I used are 512 threads, because this number will perform the greatest speedup throughout the whole process. I initialize the parameter as thread_args for the range of each thread, as well. 
+The final runtime I measured in the 64 input size is 3513664us, it is approximately the speed up of 31x.  
