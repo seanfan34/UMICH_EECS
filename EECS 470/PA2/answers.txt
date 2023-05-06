@@ -1,0 +1,10 @@
+1. (a) The cycle time of 8 stage pipelined multiplier: 4.5
+   (b) The total latency of 8 stage pipelined multiplier is 4.5*8 = 36
+2. (a) The cycle time of 4 stage pipelined multiplier: 7.5
+   (a) The cycle time of 2 stage pipelined multiplier: 11
+   (b) The total latency of 4 stage pipelined multiplier is 7.5*4 = 30
+   (b) The total latency of 2 stage pipelined multiplier is 11*2 = 22
+3. The cycle time of pipelined multiplier will increase while the stage is decreasing, however the total cycle of 2 and 4 stage pipelined multiplier 
+   will be less than 8 stage. Hence it is reasonable.
+4. The clock cycle time of ISR is :8.5
+5. (2975-25)/10 = 295, 2 stage multiplier will have larger cycle time, however it will reduce its total cycle, hence it will cause a performance gain.
