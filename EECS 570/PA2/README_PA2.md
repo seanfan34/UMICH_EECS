@@ -1,13 +1,13 @@
-Design and Verification of a Cache Coherence Protocol using Murphi
+# Design and Verification of a Cache Coherence Protocol using Murphi
 
-Programming Assignment 2
+## Programming Assignment 2
 
-Overview
+### Overview
 
 In this assignment, you will design and verify a cache coherency protocol for a multiprocessor system. Your protocol will be a fairly simple invalidation-based protocol, but to get full credit you must implement an optimization. We will describe the basic requirements and a possible optimization for you. As always, creativity is encouraged.
 Writing a cache coherency protocol is reasonably challenging; verifying its correctness is a necessary, but very difficult aspect of the process. Sophisticated protocols (e.g., DASH), have been developed and verified, however this remains an active research area. How do we reduce the number of messages for a transaction? The size of the directory? How fast can the directory controller run, and how can we reduce the design complexity? All of these are fundamentally related to the design and verification of the protocol itself. 
 
-Baseline Protocol
+### Baseline Protocol
 
 You will design and verify an invalidation-based cache coherency protocol. The protocol you develop will have a number of characteristics:
 It uses an interconnect network that supports only point-to-point communication. All communication is done by sending and receiving messages. The interconnect network may reorder messages arbitrarily. It may delay messages, but it will always deliver messages eventually. Messages are never lost, corrupted or replicated. Message delivery cannot be assumed to be in the same order as they were sent, even for the same sender and receiver pair.
@@ -24,75 +24,52 @@ You are supposed to write a plain, directory-based cache-coherency base-line pro
 
 The base-line protocol shall deliver data always in the state needed by the requesting processor. In other words do not bother with speculating on supplying data in E-state for a normal load. Thus E-state is always a consequence of a store. Therefore in this case you only have 3 cache states: I = invalid, S = shared (read-only) and M = modified (exclusive and dirty). The memory unit could be regarded as a home node without a processor, so it will never do anything on its own. For example, it will never issue an unsolicited recall request. 
 
-
-Optimizations
+### Optimizations
 
 The design space for cache coherency protocols is very large. In the past, a variety of optimizations have been proposed and implemented that reduce the directory storage, cut the number of message hops, or otherwise improve resource and performance for distributed shared-memory systems. In this project, we want you to implement and verify at least one optimization for your baseline protocol.
 For example, consider the scenario depicted in Figure 1. Initially, the address X is shared among a group of nodes (not shown). Then, node 1 requests modified (M) access to X. As part of the invalidation they receive, the sharers of X record that node 1 now has X in the modified state. When one of the former sharers (N) requests access to X again, a speculative request is issued to node 1 for X in hopes that P1 still has X in modified state.
 
-MSI Optimization
-Figure 1. Speculative requests to reduce the number of message hops. (a) shows the baseline protocol with three hops, while (b) reduces this to two hops if the speculative request is successful.
-The goal is to reduce the number of hops accessing X. If the speculative request is successful, the normal three-hop transaction is reduced to two. Note that the sharing node N must still send a non-speculative request to the directory controller in case X is no longer held at node 1.
-
-This optimization is fairly straightforward, but note that we’re not discussing corner cases here: what happens when the speculative request arrives at the same time that node 1 is writing-back X? You must flush out the details of this or other optimizations and make sure they are correct by verifying the protocol and your optimizations.
-
-Possible optimizations (Easy to Hard):
-
-Self-downgrade (spontaneous M→S)
-Migratory sharing optimization 
-Cruise missile invalidations
-MESI, directory may provide E in response to reads
-Add an owned (O) state
-2-hop speculative requests
-Occupancy-free directory
-2 directories with directory migration / delegation 
-SCI-style distributed sharer lists 
-
-
-
-
-Deliverables
+### Deliverables
 
 You must specify and verify your protocol and optimization(s) using Murphi, a formal verification tool. Murphi runs out-of-the-box on an x86 Linux machine when compiled for 32-bit binary, but contact us ASAP if you have any trouble. You will turn in the Murphi source code that describes and verifies your protocol and a two-page description of your protocol, optimizations, and verification approach. 
 
-
-
-Murphi Distribution
+### Murphi Distribution
 
 eecs570_sample/:   sample code for assignment
 pingpong.m:   two-player ping-pong game  ⇐ good to learn basics !!
 twostate.m:   4-hop, 2-state valid-invalid (VI) coherence protocol  ⇐ good starting point for assignment !!
 
-Compiling
+### Compiling
 
 Use a Linux system for this assignment.
-Step 0. Build Murphi
-
+#### Step 0. Build Murphi
+```bash
 tar -xvf eecs570_p2.tar.gz
 cd Murphi3.1/src
 make mu
-
-Step 1. Compile Murphi source
-
+```
+#### Step 1. Compile Murphi source
+```bash
 cd Murphi3.1/eecs570_sample
 ./mu twostate.m
-
+```
 This will generate a C source file named twostate.C
 
-Step 2. Compile C code generated by Murphi
-
+#### Step 2. Compile C code generated by Murphi
+```bash
 make twostate
-
+```
 Step 3. Run
-
+```bash
 ./twostate
-
-Output
+```
+#### Output
+```bash
 ==========================================================================
 Status:
   No error found.
 
 State Space Explored:
   259 states, 894 rules fired in 0.10s. 
-
+```
 
