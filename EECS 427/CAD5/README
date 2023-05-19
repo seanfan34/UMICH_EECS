@@ -1,0 +1,66 @@
+Full path names of Logarithmic_shifter for the cells (schematic, symbol and layout)
+
+INV: /afs/umich.edu/class/eecs427/w23/group7/CAD5/CAD_LIB/INV
+Logarithmic_shifter: /afs/umich.edu/class/eecs427/w23/group7/CAD5/CAD_LIB/Logarithmic_shifter
+Logarithmic_shifter NC: /afs/umich.edu/class/eecs427/w23/group7/CAD5/CAD_LIB/Logarithmic_shifter_NC
+speedpath: /afs/umich.edu/class/eecs427/w23/group7/CAD5/CAD_LIB/speed_path
+Lshifter_test: /afs/umich.edu/class/eecs427/w23/group7/CAD5/CAD_LIB/Lshifter_test 
+
+==================================================================================================================
+
+NCVerilog simulation
+
+Adding 3.3ns delay to the B<15:0> as the delay of worst case delay in post-PEX simulation
+
+
+==================================================================================================================
+
+Worst case delay path
+
+critical path: A<0> to B<15>
+In the logarithmic shifter, A<0> to B<15> has the longest wire and path to propogate. Hence, it will have more delay than other paths.
+
+Estimated all input pins capacitance
+
+A: (0.28+0.28)um * 1.3fF/um = 0.728 fF
+sh1: (0.28+0.56)um * 1.3fF/um = 1.092 fF
+sh2: (0.28+0.56)um * 1.3fF/um = 1.092 fF
+sh4: (0.28+0.56)um * 1.3fF/um = 1.092 fF
+sh8: (0.28+0.56)um * 1.3fF/um = 1.092 fF
+
+Input pin capacitance after PEX
+
+A: 5.80861E-15 F
+sh1: 3.40133E-15 F
+sh2: 3.40133E-15 F
+sh4: 3.40133E-15 F
+sh8: 3.40133E-15 F
+
+==================================================================================================================
+
+Simulation delay time
+
+Worst case delay from A<0> to B<15>
+
+Rise delay: 3.2866ns
+Fall delay: 3.8147ns
+
+
+==================================================================================================================
+Area of Layout
+Bit slice: 7.6um*20.8um=158.08um^2
+Total area: 126um*20.8um=2620.8um^2
+
+==================================================================================================================
+Shifter design considerations
+
+In this CAD, we implement the logarithmic shifter. We use a single transistor to propogate the input signal. In the shifter, select inputs are defined as sh1, sh2, sh4 and sh8. These select signals can left shift our input bits A from 0 to 15 bits. However, transistor in each stage can cause voltage drop and eventually 
+cause several output errors. Hence, we added the keeper behind each stage of the logarithmic shifter, the keeper can avoid the voltage drop and 
+increase its noise margin. Then we size the inverter in the keeper to optimal the delay. We size them to be 280/560um, 280/840um and 280/1120um. So the delay can be decreased and the inverter is set as high-skewed. 
+
+When it comes to layout, knowing that the shifter should be placed between RF and ALU, we make sure the bit slice width is matched. In addition, our shifter's inputs and outputs go through from up to down to match the outputs of RF and inputs of ALU. When doing wiring, the ports are connected like ladders.Finally, to reduce the area, we compress the height of signal lines. 
+
+
+
+
+
