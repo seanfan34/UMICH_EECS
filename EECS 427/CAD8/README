@@ -1,0 +1,87 @@
+Full paths names:
+controller: /afs/umich.edu/class/eecs427/w23/group7/CAD8/CAD8_LIB/decode
+Processor post_apr: /afs/umich.edu/class/eecs427/w23/group7/CAD8/CAD8_LIB/CPU_post
+Processor pre_apr: /afs/umich.edu/class/eecs427/w23/group7/CAD8/CAD8_LIB/CPU
+testfixture.verilog: /afs/umich.edu/class/eecs427/w23/group7/CAD8/CPU_post_run1/testfixture.verilog
+
+====================================================================================
+
+Worst case delay: 0.92ns
+
+Worst case delay path
+
+Path 1: MET Clock Gating Setup Check with Pin U7/B0 
+Endpoint:   U7/A1           (v) checked with trailing edge of 'clk'
+Beginpoint: tmpQ_reg_14_0/Q (v) triggered by  leading edge of 'clk'
+Path Groups: {reg2cgate}
+Analysis View: typical_analysis_view
+Other End Arrival Time          1.019
+- Clock Gating Setup            0.000
++ Phase Shift                   0.000
+- Uncertainty                   0.100
+= Required Time                 0.919
+- Arrival Time                  0.913
+= Slack Time                    0.006
+     Clock Rise Edge                      0.000
+     + Source Insertion Delay            -0.108
+     = Beginpoint Arrival Time           -0.108
+     Timing Path:
+     +-----------------------------------------------------------------------------------------------+ 
+     |          Pin          | Edge |         Net         |    Cell     | Delay | Arrival | Required | 
+     |                       |      |                     |             |       |  Time   |   Time   | 
+     |-----------------------+------+---------------------+-------------+-------+---------+----------| 
+     | clk                   |  ^   | clk                 |             |       |  -0.108 |   -0.102 | 
+     | CTS_ccl_a_buf_00001/A |  ^   | clk                 | CLKBUFX20TR | 0.000 |  -0.108 |   -0.102 | 
+     | CTS_ccl_a_buf_00001/Y |  ^   | CTS_2               | CLKBUFX20TR | 0.108 |   0.001 |    0.007 | 
+     | tmpQ_reg_14_0/CK      |  ^   | CTS_2               | DFFQX4TR    | 0.002 |   0.003 |    0.009 | 
+     | tmpQ_reg_14_0/Q       |  v   | opcode_2_0          | DFFQX4TR    | 0.297 |   0.300 |    0.306 | 
+     | FE_OFC6_opcode_2_0/A  |  v   | opcode_2_0          | INVX2TR     | 0.001 |   0.300 |    0.306 | 
+     | FE_OFC6_opcode_2_0/Y  |  ^   | FE_DBTN5_opcode_2_0 | INVX2TR     | 0.097 |   0.397 |    0.403 | 
+     | U494/B                |  ^   | FE_DBTN5_opcode_2_0 | CLKAND2X2TR | 0.000 |   0.397 |    0.403 | 
+     | U494/Y                |  ^   | n3720               | CLKAND2X2TR | 0.115 |   0.513 |    0.519 | 
+     | U555/A                |  ^   | n3720               | NAND2X2TR   | 0.000 |   0.513 |    0.519 | 
+     | U555/Y                |  v   | n980                | NAND2X2TR   | 0.034 |   0.547 |    0.553 | 
+     | U467/B0               |  v   | n980                | OA21X2TR    | 0.000 |   0.547 |    0.553 | 
+     | U467/Y                |  v   | n97                 | OA21X2TR    | 0.082 |   0.630 |    0.636 | 
+     | U568/C                |  v   | n97                 | AND3X4TR    | 0.000 |   0.630 |    0.636 | 
+     | U568/Y                |  v   | n427                | AND3X4TR    | 0.101 |   0.731 |    0.737 | 
+     | U715/B                |  v   | n427                | NAND2X2TR   | 0.000 |   0.732 |    0.738 | 
+     | U715/Y                |  ^   | MUX_SEL_extend      | NAND2X2TR   | 0.105 |   0.837 |    0.843 | 
+     | U570/B                |  ^   | MUX_SEL_extend      | NOR3BX2TR   | 0.000 |   0.838 |    0.844 | 
+     | U570/Y                |  v   | n730                | NOR3BX2TR   | 0.075 |   0.912 |    0.918 | 
+     | U7/A1                 |  v   | n730                | AOI21X4TR   | 0.001 |   0.913 |    0.919 | 
+     +-----------------------------------------------------------------------------------------------+ 
+     Clock Fall Edge                      1.000
+     + Source Insertion Delay            -0.119
+     = Beginpoint Arrival Time            0.881
+     Other End Path:
+     +--------------------------------------------------------------------------------+ 
+     |          Pin          | Edge |  Net  |    Cell    | Delay | Arrival | Required | 
+     |                       |      |       |            |       |  Time   |   Time   | 
+     |-----------------------+------+-------+------------+-------+---------+----------| 
+     | clk                   |  v   | clk   |            |       |   0.881 |    0.875 | 
+     | CTS_ccl_a_buf_00002/A |  v   | clk   | CLKBUFX6TR | 0.000 |   0.882 |    0.876 | 
+     | CTS_ccl_a_buf_00002/Y |  v   | CTS_3 | CLKBUFX6TR | 0.136 |   1.018 |    1.012 | 
+     | U7/B0                 |  v   | CTS_3 | AOI21X4TR  | 0.001 |   1.019 |    1.013 | 
+     +--------------------------------------------------------------------------------+ 
+====================================================================================
+
+How to determine the timing constraint:
+	Picking the arbitrary cycle time -> cut down the cycle time according to the slack of critical path
+	In our case, we started from 4ns and all the way down to 2ns. 
+
+===================================================================================
+
+How to decide floorplan:
+
+1. In the begining, we set core height at 75um and width at 70 um. But we found that there were some short or wiring problems. 
+2. Thus, we increased the width and the height gradually to (75,75), (80,80) and (85,85) and then there was no error in geometic and connectivity report. The final floorplan ratio = 90.4:87 = 1:0.96
+
+===================================================================================
+
+Design consideration:
+
+We follow the tutorial ISA_W23.pdf to design our decoder.
+We implement all the control signals of the baseline instructions.
+net1 is the final output, which will also send back to input D of RF. 
+
