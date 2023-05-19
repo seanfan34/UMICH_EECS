@@ -1,0 +1,142 @@
+Full path names (schematic, symbol and layout)
+
+RF:
+/afs/umich.edu/class/eecs427/w23/group7/CAD3/CAD3_LIB/RF
+
+Speed-path analog environment states (rise and fall are combined in one state, so there are only 2 environment states in total):
+/afs/umich.edu/class/eecs427/w23/group7/CAD3/CAD3_LIB/speed_path
+
+Speed-path before pex:
+/afs/umich.edu/class/eecs427/w23/group7/CAD3/CAD3_LIB/speed_path
+
+Speed-path after pex:  
+/afs/umich.edu/class/eecs427/w23/group7/CAD3/CAD3_LIB/speed_path_PEX
+
+==================================================================================================================
+                                    
+WE_MASTER                   0.56(um)*1.3(fF/um)*15
+
+we_master_b                	0.56(um)*1.3(fF/um)*15
+
+wei_clkb                    0.56(um)*1.3(fF/um)*15
+
+wei_clk                     0.56(um)*1.3(fF/um)*15
+
+QA                          long wire + load = 
+							6(um)*16*0.2(fF/um)+0.56(um)*1.3(fF/um)*15
+
+QB                          long wire + load = 
+							6(um)*16*0.2(fF/um)+0.56(um)*1.3(fF/um)*15
+
+master-to-slaves node       long wire + load = 
+							6(um)*16*0.2(fF/um)+0.56(um)*1.3(fF/um)*15
+
+
+Estimated input pin capacitance
+
+WE:         (0.56+0.56)(um)*1.3(fF/um)      
+CLK:        (0.56+0.56)(um)*1.3(fF/um)      
+D:          (0.28+0.56)(um)*1.3(fF/um)      
+WE_MASTER:  (0.28+0.28)(um)*1.3(fF.um)      
+READ_A:     (0.28+0.28+0.56)(um)*1.3(fF/um) 
+READ_B:     (0.28+0.28+0.56)(um)*1.3(fF/um) 
+
+
+After PEX
+         	 
+WE_MASTER: 34.6fF
+WE_MASTER_b: 33.9fF
+master-to-slaves node: 20.8fF
+wei_clk: 29.4fF
+wei_clk_b: 28.1fF
+QA: 40.7fF       
+QB: 6.35fF        
+==================================================================================================================
+
+read rise delay with estimated C: 0.66ns
+read fall delay with estimated C: 0.44ns
+write rise delay with estimated C: 0.44ns
+write fall delay with estimated C: 0.36ns
+
+read rise delay with PEX: 1.38ns
+read fall delay with PEX: 1.21ns
+write rise delay with PEX: 0.41ns
+write fall delay with PEX: 2.31ns
+
+setup time:0.245ns
+hold time:0.15ns
+
+==================================================================================================================
+Inputs for NC verilog simulation:
+
+Add delays 0.66ns and setup time 0.245ns to the schematic diagram
+
+always 
+begin 
+   #10 CLK = ~CLK;
+end
+
+initial
+begin 
+
+   CLK = 1'b0;
+   D[0:15] = 16'h0000;
+   RST = 1'b0;
+
+   READ_A[0:15] = 16'h0000;
+
+   READ_B[0:15] = 16'h0000;
+
+   WE_0[0:15] = 16'h0000;
+
+   WE_MASTER = 1'b0;
+
+
+   #20 D[0:15] = 16'hf000;
+       RST = 1'b1;
+       WE_MASTER = 1'b1;
+
+       READ_A[0:15] = 16'b0100_0000_0000_0000;
+       READ_B[0:15] = 16'b0100_0000_0000_0000;
+
+   #10 WE_MASTER = 1'b0;
+  
+   #10 WE_0[0:15] = 16'b0100_0000_0000_0000;
+       WE_MASTER = 1'b0;
+  
+
+   #10 D[0:15] = 16'hfff0;
+       WE_0[0:15] = 16'b0000_0000_0000_0000;
+
+   #30 D[0:15] = 16'h0f00;
+       
+   #10 WE_MASTER = 1'b1;
+       
+   #10 WE_MASTER = 1'b0;
+       WE_0[0:15] = 16'h0040;
+
+   #10 WE_0[0:15] = 16'b0;
+
+   #10 D[0:15] = 16'h000f;
+
+       WE_0[0:15] = 16'b0000_0000_0000_0001;
+       
+       READ_A[0:15] = 16'b0000_0000_0000_0001;
+       READ_B[0:15] = 16'b0000_0000_0000_0001;
+
+   #10 WE_0[0:15] = 16'b0000_0000_0000_0001;
+
+   #40 $stop;
+
+==================================================================================================================
+
+layout area:123.6um*106um= 13101.6um^2
+Master bit:3.6um*7.6um
+Slave bit:6.4um*7.6um
+
+Description to RF design
+
+Layout
+We first implemented the master and slave bit. Then, we flipped the feedback path of slave bit and combined it to feedforward path of slave bit to reduce the area.  After that, we copied the master and slave bit several times. For input signals, We wanted RST signal, so we added NAND2. 
+
+
