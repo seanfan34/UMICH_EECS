@@ -1,0 +1,129 @@
+Full paths names:
+
+Datapath: /afs/umich.edu/class/eecs427/w23/group7/CAD7/CAD7_LIB/Datapath
+Datapath_test: /afs/umich.edu/class/eecs427/w23/group7/CAD7/CAD7_LIB/Datapath_NC
+testfixture.verilog: /afs/umich.edu/class/eecs427/w23/group7/CAD7/Datapath_NC_run2/testfixture.verilog
+
+====================================================================================
+
+Design consideration:
+
+To save more area, we didn't use a 2-input MUX which selects D or PC and import the signal into RF, but we merged the singal PC into the MUX which is ALU's, DMEM's and shifter's output. 
+
+===================================================================================
+
+Input pin capacitance:
+
+CLK = 5.75872E-14 F
+D<15:0> = 2.07539E-14 F
+Rsrc<15:0> = 4.18600E-14 F
+dest_in<15:0> = 4.10198E-14 F
+RST = 4.35896E-13 F
+WriteAddr_in<15:0> = 3.158583E-15 F
+Write_en = 3.76844E-14 F
+
+WEN = 3.20770E-15 F
+CEN = 2.37817E-15 F
+
+ALU_SEL<1:0> = 9.67724E-14 F
+Cin = 5.56393E-14 F
+OUT_SEL<1:0> = 7.73374E-14 F
+MUX_SEL_extend = 4.25621E-14 F
+MUX_SEL_dest = 4.19712E-14 F
+mUX_SEL_sign = 2.09319E-14 F
+MUX_SEL_src = 4.07392E-14 F
+shift_SEL<1:0> = 1.79176E-14 F
+
+
+====================================================================================
+
+Delay comparision table:
+
+
+Rise delay				After		Before
+
+Shifter					3.07ns		3.29ns
+
+ALU						0.85ns		1.06ns
+
+RF Write Rise Delay		0.45ns		0.41ns
+
+RF Read Rise Delay		1.68ns		1.38ns
+
+MUX21					0.13ns		0.12ns
+
+MUX41					0.23ns		0.29ns
+
+
+
+
+Fall delay				After		Before
+
+Shifter(A_in to out)    3.18ns		3.81ns
+  
+ALU(S)					0.31ns		0.55ns
+
+RF Write Fall Delay		2.31ns		2.31ns
+
+RF Read Fall Delay		0.84ns		1.21ns
+
+MUX21					0.07ns		0.06ns
+
+MUX41					0.13ns		0.18ns
+
+====================================================================================
+
+Control signals:
+
+ALU_SEL[1:0]: ADD/XOR/OR/AND, Cin: SUB/CMP.
+ALU_SEL[1:0] = 2'b00: ADD, SUB, CMP
+	     = 2'b01: AND, 
+	     = 2'b10: OR, 
+	     = 2'b11: XOR 
+
+MUX_SEL_dest = 1'b0: Rdest
+	     = 1'b1: 0
+
+MUX_SEL_extend = 1'b0: Rdest
+	       = 1'b1: Imm_16
+
+MUX_SEL_src = 1'b0: Rsrc
+	    = 1'b1: Imm_16
+
+MUX_SEl_sign= 1'b0: <*8>VSS!
+	    = 1'b1: <*8>Imm<7>
+
+shift_SEL[1:0] = 2'b00: Rsrc
+	       = 2'b01: Imm_8
+	       = 2'b10: 8
+	       = 2'b11: 0
+
+OUT_SEL[1:0] = 2'b00: Q_DMEM
+	     = 2'b01: alu_out
+	     = 2'b10: shifter_out
+	     = 2'b11: 0
+====================================================================================
+
+NC-Verilog
+
+0-10ns: Reset
+10-40ns: setup address, value and do ADD instructions
+40-50ns: SUB/CMP
+50-60ns: AND
+60-70ns: OR
+70-80ns: XOR
+80-90ns: ADDI
+90-100ns: SUBI/CMPI
+100-110ns: ANDI
+110-120ns: ORI
+120-130ns: XORI
+130-140ns: MOV
+140-150ns: MOVI
+150-180ns: STORE
+180-200ns: LOAD
+200-210ns: LSH
+210-220ns: LSHI
+220ns-END: LUI
+====================================================================================
+
+
