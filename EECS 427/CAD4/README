@@ -1,0 +1,61 @@
+Full path names:
+ALU:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/ALU
+Carry_Select_Adder_16:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/Carry_Select_Adder_16
+MUX41:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/MUX41
+MUX21_TG:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/MUX21_TG
+4bit_ADDER_critical_path_first:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/4bit_ADDER_critical_path_first
+4bit_ADDER:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/4bit_ADDER
+4bit_ADDER_critical_path_last:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/4bit_ADDER_critical_path_last
+Critical_path_first:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/Critical_path_first
+1bit_Manchester_Mirror_adder:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/1bit_Manchester_Mirror_adder
+Critical_path_last:/afs/umich.edu/class/eecs427/w23/group7/CAD4/CAD4_LIB/Critical_path_last
+====================================================================================
+Worse case delay path:
+
+A<0> to Cout, including the following parts:
+1.Setup: A and B goes through an inverter to produce Abar and Bbar. A and B goes through an AND gate to produce G and Gbar. A and B goes through a XOR and an inverter to produce K.  
+2.Carry: We implemented a mirror adder, which the first half of it was replaced by a Manchester carry chain.
+3.MUX: We have four bits in each stage, so there are four stages. For each stage, the Cout would connect to the Cin in the next stage. The sum connects to one of the inputs in 2to1 MUX. 
+4.SUM: After selecting two Cout from the fourth stage, we get Cout.
+tadd = tsetup + Mtcarry + (N/M)tmux + tsum
+M=4, N=4
+
+====================================================================================
+Worse case delay number and delay for NC verilog simulation:
+
+We added 3.9ns delay as the worst case delay at the inputs, and then ran NCverilog simulation again.    
+
+====================================================================================
+Flag delay
+F rise/fall:0.78267/0.37 ns  
+Z rise/fall:0.3953/0.39513 ns
+N rise/fall:0.252292/0.856 ns
+
+====================================================================================
+Estimated all inputs pin cap
+A:(0.56+0.28+0.56+0.28+0.56+0.56+0.32*2+0.16*2)*1.3 = 4.888 fF
+B:
+(0.56+0.28+0.56+0.28+0.56+0.56+0.32*2+0.16*2)*1.3 = 4.888 fF
+Cin:
+(0.56+0.56+0.32+0.16)*1.3= 2.08 fF
+SEL 1,2: (0.56+0.28+0.56+0.56)*16*1.3 = 40.768 fF
+
+After PEX
+A:1.94053*e^-14 F
+B:1.30057*e^-14 F
+Cin:4.33175*e^-14 F
+SEL1:5.10508*e^-14 F
+SEL2:3.73008*e^-14 F
+
+====================================================================================
+Layout Area:
+ALU: 43.6um*121.6um=5301.76um^2
+Carry_Select_Adder_16: 28.8*um*121.6um=3502.08um^2
+4bit_ADDER:30.4um*22.4um=680.96um^2
+MUX21_TG:3.2um*4um=12.8um^2
+1bit_Manchester_Mirror_adder:9.6um*7.6um=72.96um^2
+
+Design Consideration:
+In 1bit_Manchester_Mirror_adder we mixed Manchester carry chain and mirror adder because it can reduce the area and inprove the speed, so we changed our first half of schematic in 1bit_Manchester_Mirror_adder. Also, we adjusted the sizes of the gates on the  in critical path. For layout, since we had to consider critical path, we have different sizes and schematics of adder. It takes more time to finish our layout. To make the ALU match the RF circuit. We set the bit width to 7.6 um. Since we are implementing the Carry Select Adder, we need to reserve more space to route the M2 and M3 from the full adder to the MUX. Also, we planned to put the adder and input pin A, B at the top of the ALU and to put the AND, OR, XOR and 4 to 1 MUX at the bottom at the ALU. Therefore, we need to preserved space to route the A and B wire through the entire ALU.
+
+
