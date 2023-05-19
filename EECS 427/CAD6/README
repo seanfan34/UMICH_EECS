@@ -1,0 +1,102 @@
+Full paths names:
+PC: /afs/umich.edu/class/eecs427/w23/group7/CAD6/CAD6_LIB/PC
+IMEM: /afs/umich.edu/class/eecs427/w23/group7/CAD6/CAD6_LIB/Inst_rom_g1
+PC_behavior_test: /afs/umich.edu/class/eecs427/w23/group7/CAD6/CAD6_LIB/PC_IMEM_Beh
+PC_post_APR_test: /afs/umich.edu/class/eecs427/w23/group7/CAD6/CAD6_LIB/PC_IMEM_Post
+
+====================================================================================
+Worst case delay:1.3ns
+
+Worst case delay path
+
+Path 1: MET Setup Check with Pin Rlink_reg_12_0/CK 
+Endpoint:   Rlink_reg_12_0/D (^) checked with  leading edge of 'clk'
+Beginpoint: PC_reg_0_0/Q     (^) triggered by  leading edge of 'clk'
+Path Groups: {reg2reg}
+Analysis View: typical_analysis_view
+Other End Arrival Time         -0.000
+- Setup                         0.097
++ Phase Shift                   1.500
+- Uncertainty                   0.100
+= Required Time                 1.303
+- Arrival Time                  1.295
+= Slack Time                    0.008
+     Clock Rise Edge                      0.000
+     + Source Insertion Delay            -0.002
+     = Beginpoint Arrival Time           -0.002
+     Timing Path:
+     +---------------------------------------------------------------------------------+ 
+     |       Pin        | Edge |    Net     |    Cell     | Delay | Arrival | Required | 
+     |                  |      |            |             |       |  Time   |   Time   | 
+     |------------------+------+------------+-------------+-------+---------+----------| 
+     | clk              |  ^   | clk        |             |       |  -0.002 |    0.005 | 
+     | PC_reg_0_0/CK    |  ^   | clk        | DFFQX1TR    | 0.003 |   0.001 |    0.008 | 
+     | PC_reg_0_0/Q     |  ^   | PC[0]      | DFFQX1TR    | 0.468 |   0.469 |    0.476 | 
+     | add_51/U71/B     |  ^   | PC[0]      | ADDHXLTR    | 0.001 |   0.469 |    0.477 | 
+     | add_51/U71/CO    |  ^   | add_51/n55 | ADDHXLTR    | 0.180 |   0.649 |    0.656 | 
+     | add_51/U70/B     |  ^   | add_51/n55 | AND2X2TR    | 0.000 |   0.649 |    0.657 | 
+     | add_51/U70/Y     |  ^   | add_51/n52 | AND2X2TR    | 0.120 |   0.769 |    0.777 | 
+     | add_51/U68/A     |  ^   | add_51/n52 | AND2X2TR    | 0.000 |   0.770 |    0.777 | 
+     | add_51/U68/Y     |  ^   | add_51/n47 | AND2X2TR    | 0.126 |   0.896 |    0.903 | 
+     | add_51/U84/B     |  ^   | add_51/n47 | CLKAND2X3TR | 0.001 |   0.896 |    0.904 | 
+     | add_51/U84/Y     |  ^   | add_51/n1  | CLKAND2X3TR | 0.149 |   1.046 |    1.053 | 
+     | add_51/U82/A     |  ^   | add_51/n1  | INVXLTR     | 0.000 |   1.046 |    1.053 | 
+     | add_51/U82/Y     |  v   | add_51/n84 | INVXLTR     | 0.041 |   1.087 |    1.095 | 
+     | add_51/U76/B     |  v   | add_51/n84 | NAND2X1TR   | 0.000 |   1.087 |    1.095 | 
+     | add_51/U76/Y     |  ^   | add_51/n85 | NAND2X1TR   | 0.049 |   1.136 |    1.143 | 
+     | add_51/U65/A     |  ^   | add_51/n85 | CLKAND2X2TR | 0.000 |   1.136 |    1.143 | 
+     | add_51/U65/Y     |  ^   | N42        | CLKAND2X2TR | 0.088 |   1.224 |    1.232 | 
+     | U121/A0          |  ^   | N42        | AO22X2TR    | 0.000 |   1.224 |    1.232 | 
+     | U121/Y           |  ^   | n24        | AO22X2TR    | 0.071 |   1.295 |    1.302 | 
+     | Rlink_reg_12_0/D |  ^   | n24        | DFFQX1TR    | 0.000 |   1.295 |    1.303 | 
+     +---------------------------------------------------------------------------------+ 
+     Clock Rise Edge                      0.000
+     + Source Insertion Delay            -0.002
+     = Beginpoint Arrival Time           -0.002
+     Other End Path:
+     +------------------------------------------------------------------------+ 
+     |        Pin        | Edge | Net |   Cell   | Delay | Arrival | Required | 
+     |                   |      |     |          |       |  Time   |   Time   | 
+     |-------------------+------+-----+----------+-------+---------+----------| 
+     | clk               |  ^   | clk |          |       |  -0.002 |   -0.010 | 
+     | Rlink_reg_12_0/CK |  ^   | clk | DFFQX1TR | 0.002 |  -0.000 |   -0.008 | 
+
+====================================================================================
+
+How to determine the timing constraint:
+	Picking the arbitrary cycle time -> cut down the cycle time according to the slack of critical path
+	In our case, we started from 4ns and all the way down to 1.5ns. 
+
+
+====================================================================================
+Verilog Simulation pattern explanation(shown in pictures):
+0- 15ns 	reset
+15-30ns		PC add 1 every cycle
+30-45ns		testing branch address
+45-60ns		testing jump address
+60-81ns		stall & wait for scan chain result
+81-95ns		testing jump and link
+
+===================================================================================
+
+Floorplan ratio:
+
+1. In the begining, we set core height at 75um and width at 70 um. But we found that there were some short or wiring problems. 
+
+2. Thus, we increased the width and the height gradually to (75,72), (75,75), (80,80) and (85,85) and then there was no error in geometic and connectivity report.  
+
+3. However, we found there were errors in PC.dc.log, so we needed to adjust.
+
+4. The final floorplan ratio = 85:85
+
+===================================================================================
+PC's design explanation:
+
+In view of the pipelined design, we added a stall input for the PC module.
+If the instruction is "jump" or "branch", the stall signal should be asserted, so that the PC is not going to fetch the next instruction.
+(The first stage of the pipeline is going to be locked at this time.)
+After the decode result is obtained, PC can calculate the branch target according the control inputs, so it can fetch the right next PC.
+In our PC, branch target is calculated in PC.
+
+
+
